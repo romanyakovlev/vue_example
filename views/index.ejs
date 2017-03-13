@@ -1,0 +1,67 @@
+<%- include('header', {title: title}); %>
+
+<style>
+	.red {
+		color: red;
+	}
+
+	.green {
+		color: green;
+	}
+
+</style>
+<div id="fd">
+<p v-bind:class="colorClass">{{value}}</p>
+<button v-on:click="increment">+</button>
+<button v-on:click="changeColor">Перекрасить</button>
+<p v-show="flag">Одно</p>
+<p v-show="!flag">Другое</p>
+<button v-on:click="changeState">Изменить</button>
+
+<p v-for="value in arr">{{value}}</p>
+<button v-on:click="add">Добавить</button>
+
+<p>
+{{text}}	
+</p>
+<input type="text" v-model="text">
+</div>
+
+<ul>
+	<li>
+</ul>
+
+<script src="/js/vue.js"></script>
+<script>
+	var app = new Vue({
+		el: "#app", 
+		data: {
+
+		},
+
+		methods: {
+			increment: function() {
+				this.value = this.value + 1; 
+			},
+			changeColor: function() {
+
+				if (this.colorClass === "red") {
+					this.colorClass = "green"
+				} else {
+					this.colorClass = "red";
+				}
+			},
+			changeState: function() {
+				this.flag = !this.flag;
+			},
+			add: function() {
+				this.arr.push(this.arr.length);
+			}
+		}
+	});
+</script>
+
+
+
+
+<%- include('footer'); %>

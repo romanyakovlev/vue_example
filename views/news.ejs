@@ -1,0 +1,78 @@
+<%- include('header', {title: title}); %>
+
+<style>
+
+
+</style>
+
+<script src="/js/vue.js"></script>
+<script src="/js/components.js"></script>
+<script src="js/functions.js"></script>
+
+
+<div id="app1">
+<news v-for="news in newsList" v-on:update="updateNews" v-on:delete="deleteNews" v-bind:elid="news.id" v-bind:subject="news.subject" v-bind:text="news.text"></news>
+
+<div class="form">
+<p><input v-model="subject"></p>
+<p><input v-model="text"></p>
+<button type="button" v-on:click="addNews" name="button">Создать</button>
+</div>
+</div>
+
+
+<script>
+	var app1 = new Vue({
+		el: "#app1",
+		data: {
+			newsList: new Array(),
+			subject: '',
+			text: ''
+		},
+		created: function() {
+			var self = this;
+			sendGET('/getAllNews', function(err, data) {
+				for(var i=0; i < data.length; i++) {
+					self.newsList.push(data[i]);
+
+				}
+			});
+		},
+		methods: {
+			deleteNews: function(id) {
+				var self = this;
+				sendJSON('/deleteNews',{id: id},function(err, data) {
+					if(!err) {
+						for (var i = 0; i < self.newsList.length; i++)  {
+							if (self.newsList[i]['id'] === id) {
+								self.newsList.splice(i, 1);
+							}
+						}
+					}
+				});
+			},
+			updateNews: function(news_obj) {
+				var self = this;
+				sendJSON('/updateNews',{news_obj:news_obj},function(err, data) {
+					if(!err) {
+						console.log('ok');
+					}
+				});
+			},
+			addNews: function(){
+				var self = this;
+				sendJSON('/addNews', {subject: self.subject, text: self.text},
+						function(err, data) {
+					if(!err) {
+						self.newsList.push(data);
+					}
+				});
+			}
+		}
+	});
+</script>
+
+
+
+
+<%- include('footer'); %>
